@@ -1,0 +1,10 @@
+spring: 
+  application:
+    name: proudct-enquiry-service
+ 
+server:
+  port: 8700
+  
+product-stock-service:
+  ribbon:
+    listOfServers: http://localhost:8800,http://localhost:8801
