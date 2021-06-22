@@ -9,3 +9,11 @@ spring:
       server: 
         git:
           uri: https://github.com/ramakrishnareddymandhala/microservices-enviromentvariable-repo.git
+    bus:
+      enabled: true 
+    #RabbitMQ connection details
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
