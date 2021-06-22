@@ -1,9 +1,26 @@
 spring: 
   application:
     name: proudct-enquiry-service
+#RabbitMQ connection details
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
  
 server:
   port: 8700
+  
+management:
+  security:
+    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        
+
+
   
   #Following config is not required if we use eureka server
 #product-stock-service:
