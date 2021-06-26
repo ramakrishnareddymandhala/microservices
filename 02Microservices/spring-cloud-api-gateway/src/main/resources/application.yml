@@ -5,12 +5,44 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: stock-enquiry.service
+        - id: enquiry.service
           uri: lb://proudct-enquiry-service
           predicates:
             - Path=/product-enquiry/**
-          
+          filters:
+            - name: CircuitBreaker
+              args: 
+                name: proudct-enquiry-service
+                fallbackuri: forward:/enquiryServiceFallback
+        - id: stock-service
+          uri: lb://product-stock-service
+          predicates:
+            - Path=/stock-service/**
+#          filters:
+#            - name: CircuitBreaker
+#              args: 
+#                name: product-stock-service
+#                fallbackuri: forward:/productServiceFallback
+                
+     
 server:
   port: ${port:8900}
+  
+hystrix:
+  command: 
+    fallbackcmd:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 4000
+
+
+management:
+  security:
+    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
   
   

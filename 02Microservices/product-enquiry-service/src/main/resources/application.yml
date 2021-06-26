@@ -19,8 +19,18 @@ management:
       exposure:
         include: "*"
         
+feign:
+  hystrix:
+    enabled: true     
 
-
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance: 
+    hostname: localhost
   
   #Following config is not required if we use eureka server
 #product-stock-service:
