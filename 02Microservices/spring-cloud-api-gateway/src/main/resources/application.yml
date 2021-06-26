@@ -2,13 +2,13 @@ spring:
   application:
     name: spring-clould-api-gateway
     
-#  cloud:
-#    gateway:
-#      routes:
-#        - id: stock-enquiry.service
-#          uri: http://localhost:8700/
-#          predicates:
-#            - Path=/product-enquiry/**
+  cloud:
+    gateway:
+      routes:
+        - id: stock-enquiry.service
+          uri: lb://proudct-enquiry-service
+          predicates:
+            - Path=/product-enquiry/**
           
 server:
   port: ${port:8900}
