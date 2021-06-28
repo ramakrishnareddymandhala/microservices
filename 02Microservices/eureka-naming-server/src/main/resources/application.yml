@@ -1,6 +1,7 @@
 spring:
   application:
     name: eureka-naming-server
+  
 server:
   port: 8761
 
@@ -10,3 +11,10 @@ eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
+management:
+  security:
+    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"

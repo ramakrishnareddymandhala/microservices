@@ -1,6 +1,11 @@
 spring: 
   application:
     name: proudct-enquiry-service
+  sleuth:
+    enabled: true
+  zipkin:
+    enabled: true
+    base-url: ${ZIPKIN_SERVER:http://localhost:9411/}
 #RabbitMQ connection details
   rabbitmq:
     host: localhost
@@ -28,10 +33,9 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance: 
-    hostname: localhost
-  
+      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka} 
+
+
   #Following config is not required if we use eureka server
 #product-stock-service:
 #  ribbon:

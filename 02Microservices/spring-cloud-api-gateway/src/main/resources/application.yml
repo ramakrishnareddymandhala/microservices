@@ -1,7 +1,12 @@
 spring:
   application:
     name: spring-clould-api-gateway
-    
+  sleuth:
+    enabled: true
+  zipkin:
+    enabled: true
+    base-url: ${ZIPKIN_SERVER:http://localhost:9411/}
+      
   cloud:
     gateway:
       routes:
@@ -35,14 +40,20 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 4000
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka} 
 
 
-management:
+management: 
   security:
     enabled: false
   endpoints:
     web:
       exposure:
-        include: hystrix.stream
+        include: "*"
   
   

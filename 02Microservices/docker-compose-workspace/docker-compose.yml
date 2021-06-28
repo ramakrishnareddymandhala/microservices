@@ -1,0 +1,110 @@
+version: "3"
+volumes:
+  promotheus_data: {}
+ 
+
+services:
+  rk-eureka-naming-service:
+    image: rk-eureka-naming-server
+    ports: 
+      - "8761:8761"
+    networks: 
+      - test-network
+  
+  rk-product-stock-service:
+    image: rk-product-stock-service
+    environment:
+      - JAVA_OPTS=
+        - DEUREKA_SERVER=http://rk-eureka-naming-service:8761/eureka
+        - DZIPKIN_SERVER=https://zipkin:9411/
+    ports: 
+      - "8800:8800"
+    depends_on:
+      - rk-eureka-naming-service
+      #- zipkin
+    networks: 
+      - test-network
+ 
+  rk-product-enquiry-service: 
+    image: rk-product-enquiry-service
+    environment:
+      - JAVA_OPTS=
+        - DEUREKA_SERVER=http://rk-eureka-naming-service:8761/eureka
+        - DZIPKIN_SERVER=https://zipkin:9411/
+    ports: 
+      - "8700:8700"
+    depends_on:
+      - rk-product-stock-service
+      #- zipkin
+    networks: 
+      - test-network
+ 
+  rk-spring-cloud-gateway-service: 
+    image: rk-springcloud-gateway-service
+    environment:
+      - JAVA_OPTS=
+        - DEUREKA_SERVER=http://rk-eureka-naming-service:8761/eureka
+        - DZIPKIN_SERVER=https://zipkin:9411/
+        
+    ports: 
+      - "8900:8900"
+    depends_on:
+      - rk-product-stock-service
+      - rk-product-enquiry-service
+      - rk-eureka-naming-service
+      #- zipkin
+    networks: 
+      - test-network 
+    
+  promotheus:
+    image: prom/prometheus
+    volumes:
+      - ./config/:/etc/prometheus
+      - ./data/prometheus:/data
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=31d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports: 
+      - "9090:9090"
+    depends_on:
+      - rk-product-stock-service
+    networks: 
+      - test-network
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on: 
+      - promotheus
+    networks: 
+      - test-network
+      
+      
+       
+      
+  zipkin:
+    image: openzipkin/zipkin
+    environment: 
+      - STORAGE_TYPE=mem
+    ports:
+      - "9411:9411"
+    depends_on:
+      - rk-eureka-naming-service
+    networks:
+      - test-network
+      
+      
+        
+      
+      
+
+      
+      
+      
+networks:
+  test-network:
+  
